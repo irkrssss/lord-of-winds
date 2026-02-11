@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <filter id="neon-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="64" height="64" rx="12" fill="#0F0F0F"/>
+
+  <g transform="translate(12, 12) scale(0.65)">
+
+      <path d="M45.3 30.5c3.9-2.6 6.3-7.2 6.3-12.6 0-9.9-7.4-15.8-18.8-15.8H5v59.8h30.1c12 0 19.8-6.6 19.8-17.3 0-6.6-3.5-11.8-9.6-14.1zM19 14.6h11.2c4.7 0 7.8 2.5 7.8 7 0 4.4-3.1 7-7.8 7H19V14.6zM32.1 50H19V36.8h13.1c5.6 0 8.9 2.6 8.9 7.1 0 4.2-3.1 6.1-8.9 6.1z" 
+            fill="white" 
+            opacity="0.4" 
+            transform="translate(-6, -4)"/>
+
+      <path d="M45.3 30.5c3.9-2.6 6.3-7.2 6.3-12.6 0-9.9-7.4-15.8-18.8-15.8H5v59.8h30.1c12 0 19.8-6.6 19.8-17.3 0-6.6-3.5-11.8-9.6-14.1zM19 14.6h11.2c4.7 0 7.8 2.5 7.8 7 0 4.4-3.1 7-7.8 7H19V14.6zM32.1 50H19V36.8h13.1c5.6 0 8.9 2.6 8.9 7.1 0 4.2-3.1 6.1-8.9 6.1z" 
+            fill="#00F3FF" 
+            style="filter: url(#neon-glow);" 
+            transform="translate(4, 4)"/>
+  </g>
+</svg>
