@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVATAR B GENERATOR</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100..800&family=Unbounded:wght@200..900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { 'graphite': '#0F0F0F', 'acid-lime': '#00F3FF' },
+                    fontFamily: { 'display': ['"Unbounded"', 'sans-serif'], 'mono': ['"JetBrains Mono"', 'monospace'] }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { 
+            background-color: #222; 
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        .avatar {
+            width: 800px;
+            height: 800px;
+            background-color: #0F0F0F;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            background: radial-gradient(circle at center, #2a2a2a 0%, #050505 100%);
+        }
+
+        .avatar-bg-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            z-index: 0; 
+            opacity: 0.5; 
+            filter: grayscale(100%) contrast(1.2) brightness(0.6); 
+            mix-blend-mode: overlay; 
+        }
+        
+        /* Шум */
+        .noise {
+            position: absolute; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.2'/%3E%3C/svg%3E");
+            opacity: 0.5;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Визуальный круг для проверки кропа (не виден на скрине, если не включить border) */
+        .safe-zone {
+            position: absolute;
+            width: 800px;
+            height: 800px;
+            border-radius: 50%;
+            /* border: 1px dashed rgba(0, 243, 255, 0.3); Раскомментируй, чтобы видеть границы круга ТГ */
+            pointer-events: none;
+            z-index: 20;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="avatar">
+        
+        <img src="bg-cover.jpg" class="avatar-bg-img" onerror="this.style.display='none'">
+        <div class="noise"></div>
+        <div class="safe-zone"></div>
+        
+        <div class="relative z-10 flex items-center justify-center w-full h-full">
+            <h1 class="font-display font-black text-[600px] leading-none text-white select-none translate-y-8 tracking-tighter"
+                style="
+                    /* Комбинируем заливку и неоновую тень */
+                    filter: drop-shadow(0 0 40px rgba(0,243,255,0.6));
+                    -webkit-text-stroke: 4px transparent;
+                ">
+                В
+            </h1>
+            
+            <h1 class="absolute font-display font-black text-[600px] leading-none text-transparent select-none translate-y-8 tracking-tighter pointer-events-none"
+                style="-webkit-text-stroke: 8px #00F3FF; opacity: 0.4; mix-blend-mode: screen;">
+                В
+            </h1>
+        </div>
+    
+    </div>
+
+</body>
+</html>
