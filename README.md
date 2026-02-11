@@ -1,1 +1,1 @@
-# lord-of-winds
+# lord-of-the-winds

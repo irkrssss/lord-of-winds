@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ВЛАДЫКА ВЕТРА | LORD OF THE WINDS</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100..800&family=Unbounded:wght@200..900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'graphite': '#0F0F0F',
+                        'acid-lime': '#00F3FF', /* Неоновый голубой */
+                        'ice-white': '#F0F0F0',
+                    },
+                    fontFamily: {
+                        'display': ['"Unbounded"', 'sans-serif'],
+                        'mono': ['"JetBrains Mono"', 'monospace'],
+                    },
+                    backgroundImage: {
+                        'grain': "url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22 opacity=%221%22/%3E%3C/svg%3E')",
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0F0F0F;
+            color: #F0F0F0;
+            overflow-x: hidden;
+        }
+        
+        .noise-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 40; opacity: 0.07;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0F0F0F; }
+        ::-webkit-scrollbar-thumb { background: #333; }
+        ::-webkit-scrollbar-thumb:hover { background: #00F3FF; }
+
+        .cursor-blink { animation: blink 1s step-end infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        .video-bg {
+            position: absolute; right: 0; bottom: 0;
+            min-width: 100%; min-height: 100%; width: auto; height: auto;
+            z-index: -1; object-fit: cover;
+            filter: grayscale(100%) contrast(1.2) brightness(0.6);
+        }
+    </style>
+</head>
+<body class="font-mono selection:bg-acid-lime selection:text-black">
+
+    <div class="noise-overlay"></div>
+
+ <section class="relative h-screen w-full flex flex-col justify-center items-center overflow-hidden border-b border-white/10">
+        
+        <div class="absolute inset-0 z-0 bg-black">
+             <video autoplay muted loop playsinline class="video-bg">
+                <source src="assets/video:/Snowkiter-Video.mp4" type="video/mp4">
+            </video>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0F0F0F] via-black/40 to-black/20"></div>
+            <div class="absolute inset-0 bg-grain opacity-20 pointer-events-none mix-blend-overlay"></div>
+        </div>
+
+        <div class="relative z-10 container mx-auto px-4 flex flex-col h-full justify-center items-center text-center py-8 md:py-12">
+            
+            <div class="absolute top-8 right-4 md:right-8 flex gap-1 text-[10px] md:text-xs font-bold z-20">
+                <span class="bg-acid-lime text-black px-2 py-1 cursor-default">[ RU ]</span>
+                <a href="en/index_en.html" class="text-white/50 border border-white/20 px-2 py-1 hover:text-white hover:border-white transition-colors">[ EN ]</a>
+            </div>
+
+<div class="inline-flex items-center gap-2 self-start">
+                <span class="w-2 h-2 rounded-full bg-acid-lime animate-pulse"></span>
+                <span class="text-acid-lime font-mono text-xs uppercase font-bold tracking-widest">Статус: Открыта регистрация</span>
+            </div>
+
+            <div class="mb-8 self-start text-left"> 
+                <div class="text-[10px] font-mono text-white/50 uppercase mb-1 tracking-widest">
+                    ДО СТАРТА ГОНКИ:
+                </div>
+                <div class="flex items-baseline justify-start gap-3 font-mono text-acid-lime select-none">
+                    <div class="flex flex-col items-center">
+                        <span id="days" class="text-3xl md:text-5xl font-bold leading-none tabular-nums">00</span>
+                        <span class="text-[8px] text-white/40 uppercase">Дней</span>
+                    </div>
+                    <span class="text-xl md:text-3xl text-white/20 animate-pulse">:</span>
+                    <div class="flex flex-col items-center">
+                        <span id="hours" class="text-3xl md:text-5xl font-bold leading-none tabular-nums">00</span>
+                        <span class="text-[8px] text-white/40 uppercase">Часов</span>
+                    </div>
+                    <span class="text-xl md:text-3xl text-white/20 animate-pulse">:</span>
+                    <div class="flex flex-col items-center">
+                        <span id="minutes" class="text-3xl md:text-5xl font-bold leading-none tabular-nums">00</span>
+                        <span class="text-[8px] text-white/40 uppercase">Мин</span>
+                    </div>
+                    <span class="text-xl md:text-3xl text-white/20 animate-pulse">:</span>
+                    <div class="flex flex-col items-center">
+                        <span id="seconds" class="text-3xl md:text-5xl font-bold leading-none tabular-nums">00</span>
+                        <span class="text-[8px] text-white/40 uppercase">Сек</span>
+                    </div>
+                </div>
+            </div>
+<div class="font-display font-bold text-acid-lime text-xs md:text-lg tracking-[0.2em] uppercase mb-2 pl-1">
+                    LORD OF THE WINDS
+                </div>
+            <h1 class="font-display font-black text-5xl md:text-8xl lg:text-[10rem] leading-[0.85] tracking-tighter text-white mix-blend-difference mb-6 text-center">
+                ВЛАДЫКА<br>
+                <span class="text-transparent stroke-text" style="-webkit-text-stroke: 1px white;">ВЕТРА</span>
+            </h1>
+            
+            <div class="mt-4 mb-10 max-w-2xl pb-6 mx-auto text-center backdrop-blur-sm">
+                <p class="text-acid-lime font-bold uppercase tracking-wider mb-2 text-xs md:text-base">17.02 — 15.03 • ВЕСЬ МИР</p>
+            </div>
+
+            <a href="#algorithm" class="group relative inline-flex items-center justify-center px-6 py-3 md:px-8 overflow-hidden font-bold text-acid-lime transition-all duration-300 bg-transparent border-2 border-acid-lime shadow-[0_0_15px_rgba(0,243,255,0.5)] hover:shadow-[0_0_25px_rgba(0,243,255,0.8)] hover:bg-acid-lime hover:text-black focus:outline-none mx-auto">
+                <span class="absolute top-0 left-0 w-2 h-2 bg-acid-lime transition-all duration-300 group-hover:bg-black"></span>
+                <span class="absolute bottom-0 right-0 w-2 h-2 bg-acid-lime transition-all duration-300 group-hover:bg-black"></span>
+                <span class="relative uppercase tracking-widest text-sm md:text-base">
+                    [ ЗАРЕГИСТРИРОВАТЬСЯ ]
+                </span>
+            </a>
+
+        </div>
+    </section>
+
+    <nav class="sticky top-0 z-50 bg-graphite/90 backdrop-blur-md border-b border-white/10 h-14 md:h-16">
+        <div class="container mx-auto px-4 h-full flex items-center justify-between">
+            
+            <a href="#" class="text-white hover:text-acid-lime transition-colors font-bold uppercase tracking-widest text-xs md:text-sm">
+                ГЛАВНАЯ
+            </a>
+
+            <div class="hidden md:flex gap-8 text-xs font-bold uppercase tracking-widest text-white/60">
+                <a href="#about" class="text-acid-lime drop-shadow-[0_0_5px_rgba(0,243,255,0.5)] transition-colors">О соревновании</a>
+                  <a href="#gallery" class="hover:text-acid-lime transition-colors">Галерея</a>
+                <a href="#classes" class="hover:text-acid-lime transition-colors">Классы</a>
+                <a href="#disciplines" class="hover:text-acid-lime transition-colors">Дисциплины</a>              
+                <a href="#algorithm" class="hover:text-acid-lime transition-colors">Зарегистрироваться</a>
+                <a href="#rules" class="hover:text-acid-lime transition-colors">Регламент</a>
+                <a href="#contacts" class="hover:text-acid-lime transition-colors">Контакты</a>
+            </div>
+        </div>
+    </nav>
+
+<section id="about" class="py-24 bg-graphite border-b border-white/10 scroll-mt-16">
+        <div class="container mx-auto px-4">
+            
+            <div class="grid grid-cols-1 xl:grid-cols-2 gap-16 items-start">
+                
+                <div class="flex flex-col justify-between h-full">
+                    <div>
+                        <h2 class="font-display text-4xl md:text-5xl text-white uppercase leading-none mb-6">
+                            ФИЛОСОФИЯ<br>
+                            <span class="text-acid-lime">ГОНКИ</span>
+                        </h2>
+                        <div class="w-16 h-1 bg-acid-lime mb-10"></div>
+
+                        <p class="text-lg md:text-xl text-white font-light leading-relaxed mb-10">
+                            <span class="font-bold text-white">Lord of the Winds</span> — это возможность соревноваться с&nbsp;райдерами со&nbsp;всего мира, не&nbsp;выезжая за&nbsp; пределы своего домашнего спота. Вы&nbsp;катаетесь, загружаете треки и&nbsp;боретесь за&nbsp; реальные награды в&nbsp;общем зачете.
+                        </p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-white/10 pt-8">
+                            <div>
+                                <div class="flex items-center gap-3 mb-4">
+                                    <h3 class="text-white font-display text-xl uppercase">Где кататься?</h3>
+                                </div>
+                                <p class="text-white/70 text-sm leading-relaxed mb-2 font-bold">
+                                    ЛОКАЦИЯ: ВЕСЬ МИР
+                                </p>
+                                <p class="text-white/70 text-sm leading-relaxed mb-4">
+                                    Любая замерзшая акватория или&nbsp;снежное поле.
+                                </p>
+                                <p class="text-acid-lime text-sm font-bold leading-relaxed border-l-2 border-acid-lime pl-3">
+                                    Ровная снежная или&nbsp;ледяная поверхность. Перепад высот не&nbsp;более 2м на&nbsp;100м дистанции.
+                                </p>
+                            </div>
+
+                            <div>
+                                <div class="flex items-center gap-3 mb-4">
+                                    <h3 class="text-white font-display text-xl uppercase">Награды</h3>
+                                </div>
+                                <p class="text-white/70 text-sm leading-relaxed mb-4">
+                                    Победители и&nbsp;призёры в&nbsp;7-ми классах и&nbsp;4-х дисциплинах будут награждены ценными призами.</span>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+              <div class="grid grid-cols-3 gap-2 sm:gap-4 h-[500px] xl:h-[600px] w-full">
+                    
+                    <div class="relative group overflow-hidden border border-white/10 hover:border-acid-lime transition-all duration-500">
+                        <img src="assets/img:/kite.jpg" alt="Сноукайтинг" class="w-full h-full object-cover brightness-75 grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700">
+                        
+                        <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black via-black/90 to-transparent p-3 pb-4 flex flex-col justify-end items-start">
+                            <h3 class="font-display text-xs md:text-sm font-black text-acid-lime uppercase leading-none mb-1 break-all md:break-normal">
+                                СНОУКАЙТИНГ
+                            </h3>
+                            <p class="text-white/60 text-[8px] md:text-[10px] font-mono uppercase leading-tight max-w-full">
+                                Движение под куполом.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="relative group overflow-hidden border border-white/10 hover:border-acid-lime transition-all duration-500">
+                        <img src="assets/img:/wing.jpg" alt="Айсвинг" class="w-full h-full object-cover brightness-75 grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700">
+                        
+                        <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black via-black/90 to-transparent p-3 pb-4 flex flex-col justify-end items-start">
+                            <h3 class="font-display text-xs md:text-sm font-black text-acid-lime uppercase leading-none mb-1 break-all md:break-normal">
+                                АЙСВИНГ
+                            </h3>
+                            <p class="text-white/60 text-[8px] md:text-[10px] font-mono uppercase leading-tight max-w-full">
+                                Движение с крылом.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="relative group overflow-hidden border border-white/10 hover:border-acid-lime transition-all duration-500">
+                        <img src="assets/img:/surf.jpg" alt="Винсдерфинг" class="w-full h-full object-cover brightness-75 grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700">
+                        
+                        <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black via-black/90 to-transparent p-3 pb-4 flex flex-col justify-end items-start">
+                            <h3 class="font-display text-xs md:text-sm font-black text-acid-lime uppercase leading-none mb-1 break-all md:break-normal">
+                                ВИНДСЕРФИНГ
+                            </h3>
+                            <p class="text-white/60 text-[8px] md:text-[10px] font-mono uppercase leading-tight max-w-full">
+                                Парус на мачте.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+<section id="gallery" class="py-20 bg-graphite border-b border-white/10">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+                <h2 class="font-display text-4xl md:text-5xl text-white uppercase">
+                    УЧАСТНИКИ <span class="text-acid-lime">В КАДРЕ</span>
+                </h2>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="aspect-square bg-white/5 border border-white/10 relative group overflow-hidden">
+                    <div class="absolute inset-0 bg-white/10 animate-pulse"></div> <div class="absolute bottom-0 left-0 w-full p-2 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div class="text-acid-lime text-xs font-bold font-display">ALEX_RIDER</div>
+                        <div class="text-white/50 text-[10px] font-mono">KITE SKI</div>
+                    </div>
+                </div>
+                <div class="aspect-square bg-white/5 border border-white/10 relative group overflow-hidden">
+                     <div class="absolute inset-0 bg-white/5"></div>
+                     <div class="absolute bottom-0 left-0 w-full p-2 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div class="text-acid-lime text-xs font-bold font-display">MARIA_WIND</div>
+                        <div class="text-white/50 text-[10px] font-mono">WING</div>
+                    </div>
+                </div>
+                <div class="aspect-square bg-white/5 border border-white/10 relative group overflow-hidden md:col-span-2">
+                     <div class="absolute inset-0 bg-white/5"></div>
+                     <div class="absolute bottom-0 left-0 w-full p-2 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div class="text-acid-lime text-xs font-bold font-display">TEAM_SPB</div>
+                        <div class="text-white/50 text-[10px] font-mono">SPOT CHECK</div>
+                    </div>
+                </div>
+                <div class="aspect-square bg-white/5 border border-white/10 relative group overflow-hidden">
+                     <div class="absolute inset-0 bg-white/5"></div>
+                </div>
+                 <div class="aspect-square bg-white/5 border border-white/10 relative group overflow-hidden">
+                     <div class="absolute inset-0 bg-white/5"></div>
+                </div>
+                 <div class="aspect-square bg-white/5 border border-white/10 relative group overflow-hidden">
+                     <div class="absolute inset-0 bg-white/5"></div>
+                </div>
+                 <div class="aspect-square bg-white/5 border border-white/10 relative group overflow-hidden">
+                     <div class="absolute inset-0 bg-white/5"></div>
+                </div>
+            </div>
+            
+            <div class="mt-8 text-center">
+                <a href="https://t.me/Lord_of_the_Winds" target="_blank" class="inline-block border-b border-acid-lime text-acid-lime text-xs font-mono pb-1 hover:text-white hover:border-white transition-colors">
+                    СМОТРЕТЬ ВСЕ ФОТО В TELEGRAM ->
+                </a>
+            </div>
+        </div>
+    </section>
+    <section id="classes" class="py-20 bg-graphite border-b border-white/10 scroll-mt-16">
+        <div class="container mx-auto px-4">
+            <h2 class="font-display text-4xl md:text-6xl text-white mb-12 uppercase text-center md:text-left">
+                ГОНОЧНЫЕ КЛАССЫ
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                
+                <a href="classes/kite-snowboard" target="_blank" class="group bg-white/5 border border-white/10 p-6 flex flex-col justify-between h-56 hover:bg-white/10 hover:border-acid-lime transition-all duration-300 cursor-pointer">
+                    <div>
+                        <div class="text-xs font-bold text-white/30 mb-2">КЛАСС 01</div>
+                        
+                          <div class="font-display text-xl text-white uppercase leading-none mb-1 group-hover:text-acid-lime transition-colors">КАЙТ<br>СНОУБОРД</div>
+                    </div>
+                    <div class="text-acid-lime text-xs font-mono border-t border-white/10 pt-4 mt-2 group-hover:border-acid-lime/50 transition-colors flex justify-between items-center">
+                        <span>СМОТРЕТЬ РЕЗУЛЬТАТЫ</span>
+                        <span class="group-hover:translate-x-2 transition-transform">-></span>
+                    </div>
+                </a>
+                
+                <a href="classes/kite-ski" target="_blank" class="group bg-white/5 border border-white/10 p-6 flex flex-col justify-between h-56 hover:bg-white/10 hover:border-acid-lime transition-all duration-300 cursor-pointer">
+                    <div>
+                        <div class="text-xs font-bold text-white/30 mb-2">КЛАСС 02</div>
+                        <div class="font-display text-xl text-white uppercase leading-none mb-1 group-hover:text-acid-lime transition-colors">КАЙТ<br>ЛЫЖИ</div>
+                    </div>
+                    <div class="text-acid-lime text-xs font-mono border-t border-white/10 pt-4 mt-2 group-hover:border-acid-lime/50 transition-colors flex justify-between items-center">
+                        <span>СМОТРЕТЬ РЕЗУЛЬТАТЫ</span>
+                        <span class="group-hover:translate-x-2 transition-transform">-></span>
+                    </div>
+                </a>
+                
+                <a href="classes/wing-snowboard" target="_blank" class="group bg-white/5 border border-white/10 p-6 flex flex-col justify-between h-56 hover:bg-white/10 hover:border-acid-lime transition-all duration-300 cursor-pointer">
+                    <div>
+                        <div class="text-xs font-bold text-white/30 mb-2">КЛАСС 03</div>
+                        <div class="font-display text-xl text-white uppercase leading-none mb-1 group-hover:text-acid-lime transition-colors">ВИНГ<br>СНОУБОРД</div>
+                    </div>
+                    <div class="text-acid-lime text-xs font-mono border-t border-white/10 pt-4 mt-2 group-hover:border-acid-lime/50 transition-colors flex justify-between items-center">
+                        <span>СМОТРЕТЬ РЕЗУЛЬТАТЫ</span>
+                        <span class="group-hover:translate-x-2 transition-transform">-></span>
+                    </div>
+                </a>
+                
+                <a href="classes/wing-ski" target="_blank" class="group bg-white/5 border border-white/10 p-6 flex flex-col justify-between h-56 hover:bg-white/10 hover:border-acid-lime transition-all duration-300 cursor-pointer">
+                    <div>
+                        <div class="text-xs font-bold text-white/30 mb-2">КЛАСС 04</div>
+                        <div class="font-display text-xl text-white uppercase leading-none mb-1 group-hover:text-acid-lime transition-colors">ВИНГ<br>ЛЫЖИ</div>
+                    </div>
+                    <div class="text-acid-lime text-xs font-mono border-t border-white/10 pt-4 mt-2 group-hover:border-acid-lime/50 transition-colors flex justify-between items-center">
+                        <span>СМОТРЕТЬ РЕЗУЛЬТАТЫ</span>
+                        <span class="group-hover:translate-x-2 transition-transform">-></span>
+                    </div>
+                </a>
+                
+                <a href="classes/wing-blades" target="_blank" class="group bg-white/5 border border-white/10 p-6 flex flex-col justify-between h-56 hover:bg-white/10 hover:border-acid-lime transition-all duration-300 cursor-pointer">
+                    <div>
+                        <div class="text-xs font-bold text-white/30 mb-2">КЛАСС 05</div>
+                        <div class="font-display text-xl text-white uppercase leading-none mb-1 group-hover:text-acid-lime transition-colors">ВИНГ<br>КОНЬКИ</div>
+                    </div>
+                    <div class="text-acid-lime text-xs font-mono border-t border-white/10 pt-4 mt-2 group-hover:border-acid-lime/50 transition-colors flex justify-between items-center">
+                        <span>СМОТРЕТЬ РЕЗУЛЬТАТЫ</span>
+                        <span class="group-hover:translate-x-2 transition-transform">-></span>
+                    </div>
+                </a>
+                
+                <a href="classes/wing-snowskate" target="_blank" class="group bg-white/5 border border-white/10 p-6 flex flex-col justify-between h-56 hover:bg-white/10 hover:border-acid-lime transition-all duration-300 cursor-pointer">
+                    <div>
+                        <div class="text-xs font-bold text-white/30 mb-2">КЛАСС 06</div>
+                        <div class="font-display text-xl text-white uppercase leading-none mb-1 group-hover:text-acid-lime transition-colors">ВИНГ<br>СНОУСКЕЙТ</div>
+                    </div>
+                    <div class="text-acid-lime text-xs font-mono border-t border-white/10 pt-4 mt-2 group-hover:border-acid-lime/50 transition-colors flex justify-between items-center">
+                        <span>СМОТРЕТЬ РЕЗУЛЬТАТЫ</span>
+                        <span class="group-hover:translate-x-2 transition-transform">-></span>
+                    </div>
+                </a>
+                
+                <a href="classes/winter-windsurfing" target="_blank" class="md:col-span-2 group bg-white/5 border border-white/10 p-6 flex flex-col justify-between h-56 hover:bg-white/10 hover:border-acid-lime transition-all duration-300 cursor-pointer">
+                    <div>
+                        <div class="text-xs font-bold text-white/30 mb-2">КЛАСС 07</div>
+                        <div class="font-display text-xl text-white uppercase leading-none mb-1 group-hover:text-acid-lime transition-colors">ЗИМНИЙ<br>ВИНДСЕРФИНГ</div>
+                    </div>
+                    <div class="text-acid-lime text-xs font-mono border-t border-white/10 pt-4 mt-2 group-hover:border-acid-lime/50 transition-colors flex justify-between items-center">
+                        <span>СМОТРЕТЬ РЕЗУЛЬТАТЫ</span>
+                        <span class="group-hover:translate-x-2 transition-transform">-></span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+    <section id="disciplines" class="py-20 bg-graphite relative border-b border-white/10 scroll-mt-16">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+                <h2 class="font-display text-3xl md:text-5xl text-white uppercase text-right md:text-left leading-tight">
+                    ОДИН ЗАЕЗД <br><span class="text-acid-lime">4 ДИСЦИПЛИНЫ</span>
+                </h2>
+                <p class="text-white/50 text-xs md:text-sm max-w-md text-right mt-4 md:mt-0 font-mono">
+                    Каждый ваш трек автоматически попадает в&nbsp;зачет всех четырех дисциплин. Нажмите на&nbsp;дисциплину для подробностей
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/10 border border-white/10">
+                
+                <a href="disciplines/speed" target="_blank" class="group relative bg-graphite p-8 md:p-12 transition-colors hover:bg-white/5 border border-transparent hover:border-acid-lime/50 h-full flex flex-col justify-between cursor-pointer">
+                    <div>
+                        <div class="flex justify-between items-start mb-6">
+                            <h3 class="font-display text-2xl md:text-3xl text-white group-hover:text-acid-lime transition-colors">СКОРОСТЬ</h3>
+                            <span class="text-xs border border-white/20 px-2 py-1 rounded text-white/50 group-hover:border-acid-lime group-hover:text-acid-lime transition-colors">СМОТРЕТЬ РЕЗУЛЬТАТЫ ></span>
+                        </div>
+                        <p class="text-white/70 text-sm mb-4 text-justify hyphens-auto leading-relaxed">
+                            Определение максимальной скорости во&nbsp;время выполнения заезда. Значение автоматически выбирается из&nbsp;всех загруженных файлов активности участника, подходящих по&nbsp;типу заявки участника.
+                        </p>
+                    </div>
+                    <div class="mt-8 font-mono text-xs text-acid-lime">
+                        > ЛИМИТ СКОРОСТИ: СНЯТ
+                    </div>
+                </a>
+
+                <a href="disciplines/marathon" target="_blank" class="group relative bg-graphite p-8 md:p-12 transition-colors hover:bg-white/5 border border-transparent hover:border-acid-lime/50 h-full flex flex-col justify-between cursor-pointer">
+                    <div>
+                        <div class="flex justify-between items-start mb-6">
+                            <h3 class="font-display text-2xl md:text-3xl text-white group-hover:text-acid-lime transition-colors">МАРАФОН</h3>
+                            <span class="text-xs border border-white/20 px-2 py-1 rounded text-white/50 group-hover:border-acid-lime group-hover:text-acid-lime transition-colors">СМОТРЕТЬ РЕЗУЛЬТАТЫ ></span>
+                        </div>
+                        <p class="text-white/70 text-sm mb-4 text-justify hyphens-auto leading-relaxed">
+                            Определение минимального времени преодоления дистанции 42&nbsp;километра.
+                        </p>
+                    </div>
+                    <div class="mt-8 font-mono text-xs text-acid-lime">
+                        > ДИСТАНЦИЯ: 42.0 КМ
+                    </div>
+                </a>
+
+                <a href="disciplines/konyuhov" target="_blank" class="group relative bg-graphite p-8 md:p-12 transition-colors hover:bg-white/5 border border-transparent hover:border-acid-lime/50 h-full flex flex-col justify-between cursor-pointer">
+                    <div>
+                        <div class="flex justify-between items-start mb-6">
+                            <h3 class="font-display text-2xl md:text-3xl text-white group-hover:text-acid-lime transition-colors">КОНЮХОВ</h3>
+                            <span class="text-xs border border-white/20 px-2 py-1 rounded text-white/50 group-hover:border-acid-lime group-hover:text-acid-lime transition-colors">СМОТРЕТЬ РЕЗУЛЬТАТЫ >&nbsp;</span>
+                        </div>
+                        <p class="text-white/70 text-sm mb-4 text-justify hyphens-auto leading-relaxed">
+                            Определение максимальной пройденной дистанции (длина пути) за&nbsp;один заезд.
+                        </p>
+                    </div>
+                    <div class="mt-8 font-mono text-xs text-acid-lime">
+                        > РЕЖИМ: ВЫЖИВАНИЕ
+                    </div>
+                </a>
+
+                <a href="disciplines/gump" target="_blank" class="group relative bg-graphite p-8 md:p-12 transition-colors hover:bg-white/5 border border-transparent hover:border-acid-lime/50 h-full flex flex-col justify-between cursor-pointer">
+                    <div>
+                        <div class="flex justify-between items-start mb-6">
+                            <h3 class="font-display text-2xl md:text-3xl text-white group-hover:text-acid-lime transition-colors">ФОРРЕСТ ГАМП</h3>
+                            <span class="text-xs border border-white/20 px-2 py-1 rounded text-white/50 group-hover:border-acid-lime group-hover:text-acid-lime transition-colors">СМОТРЕТЬ РЕЗУЛЬТАТЫ ></span>
+                        </div>
+                        <p class="text-white/70 text-sm mb-4 text-justify hyphens-auto leading-relaxed">
+                            Определение максимальной суммарной пройденной дистанции за&nbsp;время проведения соревнования.
+                        </p>
+                    </div>
+                    <div class="mt-8 font-mono text-xs text-acid-lime">
+                        > ДИСТАНЦИЯ: СУММА ВСЕХ ЗАЕЗДОВ
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+ 
+
+    <section id="algorithm" class="py-20 bg-[#0a0a0a] border-b border-white/10 overflow-hidden scroll-mt-16">
+        <div class="container mx-auto px-4">
+            <h2 class="font-display text-4xl md:text-5xl text-white mb-16 uppercase text-right">
+                АЛГОРИТМ <span class="text-transparent stroke-text" style="-webkit-text-stroke: 1px white;">ДЕЙСТВИЙ</span>
+            </h2>
+
+            <div class="relative">
+                <div class="hidden md:block absolute top-6 left-0 w-full h-px bg-white/10"></div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-8 relative">
+                    
+                    <div class="relative pt-6 md:pt-12 group">
+                        <div class="hidden md:block absolute top-4 left-0 w-4 h-4 bg-acid-lime border-4 border-black rounded-full z-10 shadow-[0_0_15px_rgba(204,255,0,0.8)] animate-pulse"></div>
+                        
+                        <div class="text-acid-lime text-sm font-bold mb-2">ШАГ 1 // КОННЕКТ</div>
+                        <h4 class="text-xl text-white font-bold mb-4">TELEGRAM BOT</h4>
+                        <p class="text-white/60 text-sm mb-6 h-10 leading-relaxed text-xs">Зарегистрируйтесь через телеграм-бота.</p>
+                        
+                        <a href="http://t.me/LordOfTheWinds_bot" target="_blank" class="flex items-center justify-center w-full py-4 border border-acid-lime text-acid-lime font-bold uppercase tracking-widest hover:bg-acid-lime hover:text-black transition-all duration-300 shadow-[0_0_20px_rgba(204,255,0,0.1)] hover:shadow-[0_0_30px_rgba(204,255,0,0.4)] text-xs">
+                            <span class="mr-2">></span> ПЕРЕЙТИ
+                        </a>
+                    </div>
+
+                    <div class="relative pt-6 md:pt-12">
+                        <div class="hidden md:block absolute top-4 left-0 w-4 h-4 bg-[#1a1a1a] border border-white/30 rounded-full z-10"></div>
+                        <div class="text-white/50 text-sm font-bold mb-2">ШАГ 2 // СИНХРО</div>
+                        <h4 class="text-xl text-white/80 font-bold mb-4">GARMIN / STRAVA</h4>
+                        <p class="text-white/40 text-sm mb-6 h-10 leading-relaxed text-xs">Привяжите свой аккаунт Гармин или&nbsp;Страва к&nbsp;системе гонок.</p>
+                        <div class="font-mono text-[10px] text-acid-lime/70 mt-8 pt-4 border-t border-white/10">
+                            // КОГДА: 17.02-15.03
+                        </div>
+                    </div>
+
+                    <div class="relative pt-6 md:pt-12">
+                        <div class="hidden md:block absolute top-4 left-0 w-4 h-4 bg-[#1a1a1a] border border-white/30 rounded-full z-10"></div>
+                        <div class="text-white/50 text-sm font-bold mb-2">ШАГ 3 // ЗАЯВКА</div>
+                        <h4 class="text-xl text-white/80 font-bold mb-4">ВЫБОР КЛАССА</h4>
+                        <p class="text-white/40 text-sm mb-6 h-10 leading-relaxed text-xs">Подайте заявку на&nbsp;участие в&nbsp;гонке с&nbsp;выбором класса.</p>
+                        <div class="font-mono text-[10px] text-acid-lime/70 mt-8 pt-4 border-t border-white/10">
+                            // 7 КЛАССОВ
+                        </div>
+                    </div>
+
+                    <div class="relative pt-6 md:pt-12">
+                        <div class="hidden md:block absolute top-4 left-0 w-4 h-4 bg-[#1a1a1a] border border-white/30 rounded-full z-10"></div>
+                        <div class="text-white/50 text-sm font-bold mb-2">ШАГ 4 // ГОНКА</div>
+                        <h4 class="text-xl text-white/80 font-bold mb-4">ЗАЕЗД</h4>
+                        <p class="text-white/40 text-sm mb-6 h-10 leading-relaxed text-xs">Выполните заезд по&nbsp;снегу или&nbsp;льду в&nbsp;одном из&nbsp;классов.</p>
+                        <div class="font-mono text-[10px] text-acid-lime/70 mt-8 pt-4 border-t border-white/10">
+                            // АВТОМАТИЧЕСКАЯ СИНХРОНИЗАЦИЯ 
+                        </div>
+                    </div>
+
+                    <div class="relative pt-6 md:pt-12">
+                        <div class="hidden md:block absolute top-4 left-0 w-4 h-4 bg-[#1a1a1a] border border-white/30 rounded-full z-10"></div>
+                        <div class="text-white/50 text-sm font-bold mb-2">ШАГ 5 // ФИНАЛ</div>
+                        <h4 class="text-xl text-acid-lime font-bold mb-4">НАГРАЖДЕНИЕ</h4>
+                        <p class="text-white/40 text-sm mb-6 h-10 leading-relaxed text-xs">Получение статуса WINDLORD и&nbsp;ценных призов.</p>
+                        <div class="font-mono text-[10px] text-acid-lime/70 mt-8 pt-4 border-t border-white/10">
+                            // КОГДА: 16.03
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<section id="rules" class="py-20 bg-graphite border-t border-white/10">
+        <div class="container mx-auto px-4">
+            
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+                <div>
+                    <h2 class="font-display text-3xl md:text-5xl text-white uppercase leading-none">
+                        МАТЕРИАЛЫ <span class="text-transparent" style="-webkit-text-stroke: 1px white;">ГОНКИ</span>
+                    </h2>
+                </div>
+                <div class="hidden md:block text-right">
+                    <p class="text-white/50 text-xs font-mono max-w-xs">
+                        Ознакомьтесь с официальными документами перед регистрацией.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                
+                <a href="assets/docs:/rules.docx" target="_blank" class="group relative bg-white/5 border border-white/10 p-6 md:p-8 flex items-center justify-between hover:bg-white/10 hover:border-acid-lime transition-all duration-300">
+                    <div class="flex items-center gap-6">
+                        <div class="w-12 h-12 bg-black border border-white/20 flex items-center justify-center text-white/50 group-hover:text-acid-lime group-hover:border-acid-lime transition-colors">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-display text-lg md:text-xl text-white uppercase group-hover:text-acid-lime transition-colors">ГИД УЧАСТНИКА</h3>
+                        </div>
+                    </div>
+                    <div class="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-acid-lime group-hover:border-acid-lime transition-all">
+                        <svg class="w-4 h-4 text-white group-hover:text-black -rotate-45 transition-transform group-hover:rotate-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </div>
+                </a>
+
+                <a href="https://docs.google.com/document/d/13tjqM7IOLRVKFCRMFgWzQ4ASjxyxu57Czb44aOwStgM/edit?tab=t.0" target="_blank" class="group relative bg-white/5 border border-white/10 p-6 md:p-8 flex items-center justify-between hover:bg-white/10 hover:border-acid-lime transition-all duration-300">
+                    <div class="flex items-center gap-6">
+                        <div class="w-12 h-12 bg-black border border-white/20 flex items-center justify-center text-white/50 group-hover:text-acid-lime group-hover:border-acid-lime transition-colors">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-display text-lg md:text-xl text-white uppercase group-hover:text-acid-lime transition-colors">ПОЛОЖЕНИЕ О СОРЕВНОВАНИИ</h3>
+                        </div>
+                    </div>
+                    <div class="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-acid-lime group-hover:border-acid-lime transition-all">
+                        <svg class="w-4 h-4 text-white group-hover:text-black -rotate-45 transition-transform group-hover:rotate-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </div>
+                </a>
+
+                <a href="assets/docs:/" target="_blank" class="group relative bg-white/5 border border-white/10 p-6 md:p-8 flex items-center justify-between hover:bg-white/10 hover:border-acid-lime transition-all duration-300">
+                    <div class="flex items-center gap-6">
+                        
+                                                <div class="w-12 h-12 bg-black border border-white/20 flex items-center justify-center text-white/50 group-hover:text-acid-lime group-hover:border-acid-lime transition-colors">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-display text-lg md:text-xl text-white uppercase group-hover:text-acid-lime transition-colors">СОГЛАСИЕ НА ОБРАБОТКУ ДАННЫХ</h3>
+                        </div>
+                    </div>
+                    <div class="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-acid-lime group-hover:border-acid-lime transition-all">
+                        <svg class="w-4 h-4 text-white group-hover:text-black -rotate-45 transition-transform group-hover:rotate-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </div>
+                </a>
+
+                <a href="others/presentation.html" target="_blank" class="group relative bg-white/5 border border-white/10 p-6 md:p-8 flex items-center justify-between hover:bg-white/10 hover:border-acid-lime transition-all duration-300">
+                    <div class="flex items-center gap-6">
+<div class="w-12 h-12 bg-black border border-white/20 flex items-center justify-center text-white/50 group-hover:text-acid-lime group-hover:border-acid-lime transition-colors">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-display text-lg md:text-xl text-white uppercase group-hover:text-acid-lime transition-colors">ДЛЯ ПАРТНЁРОВ</h3>
+                        </div>
+                    </div>
+                    <div class="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-acid-lime group-hover:border-acid-lime transition-all">
+                        <svg class="w-4 h-4 text-white group-hover:text-black -rotate-45 transition-transform group-hover:rotate-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-white text-black border-y border-black/10">
+        <div class="container mx-auto px-4">
+            
+            <div class="text-center mb-12">
+                <h2 class="font-display text-3xl md:text-4xl uppercase font-black tracking-tight">
+                    ПАРТНЕРЫ <span class="text-transparent" style="-webkit-text-stroke: 1px black;">ГОНКИ</span>
+                </h2>
+            </div>
+
+            <div class="flex flex-wrap justify-center items-center gap-12 md:gap-24 transition-all duration-500">
+                
+                <div class="group w-32 md:w-48 h-20 flex items-center justify-center">
+                    <img src="assets/img:/logo-1.png" alt="Partner 1" class="max-h-full max-w-full object-contain opacity-80 group-hover:opacity-100 transition-opacity">
+                </div>
+                
+                <div class="group w-32 md:w-48 h-20 flex items-center justify-center">
+                    <img src="assets/img:/logo-2.png" alt="Partner 2" class="max-h-full max-w-full object-contain opacity-80 group-hover:opacity-100 transition-opacity">
+                </div>
+                
+                <div class="group w-32 md:w-48 h-20 flex items-center justify-center">
+                    <img src="assets/img:/logo-3.png" alt="Partner 3" class="max-h-full max-w-full object-contain opacity-80 group-hover:opacity-100 transition-opacity">
+                </div>
+                
+                <div class="group w-32 md:w-48 h-20 flex items-center justify-center">
+                    <img src="assets/img:/logo-4.png" alt="Partner 4" class="max-h-full max-w-full object-contain opacity-80 group-hover:opacity-100 transition-opacity">
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <section id="contacts" class="py-20 bg-[#050505] border-t border-white/10">
+        <div class="container mx-auto px-4">
+            <h2 class="font-display text-3xl md:text-5xl text-white uppercase mb-12 text-center">
+                СВЯЗЬ С <span class="text-acid-lime">НАМИ</span>
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-px bg-white/10 border border-white/10">
+                
+                <a href="https://t.me/Lord_of_the_Winds" target="_blank" class="group bg-graphite p-10 flex flex-col items-center justify-center text-center hover:bg-white/5 transition-colors cursor-pointer h-64">
+                    <div class="w-12 h-12 mb-6 text-white/50 group-hover:text-acid-lime transition-colors">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg>
+                    </div>
+                    <h3 class="font-display text-xl text-white uppercase mb-2 group-hover:text-acid-lime transition-colors">TG CHANNEL</h3>
+                    <p class="text-white/40 font-mono text-xs uppercase tracking-widest">
+                        Новости и Медиа
+                    </p>
+                </a>
+
+                <a href="https://t.me/LordOfTheWinds_bot" target="_blank" class="group bg-graphite p-10 flex flex-col items-center justify-center text-center hover:bg-white/5 transition-colors cursor-pointer h-64">
+                    <div class="w-12 h-12 mb-6 text-white/50 group-hover:text-acid-lime transition-colors">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="10" rx="2" /><circle cx="12" cy="5" r="2" /><path d="M12 7v4" /><line x1="8" y1="16" x2="8" y2="16" /><line x1="16" y1="16" x2="16" y2="16" /></svg>
+                    </div>
+                    <h3 class="font-display text-xl text-white uppercase mb-2 group-hover:text-acid-lime transition-colors">TG BOT</h3>
+                    <p class="text-white/40 font-mono text-xs uppercase tracking-widest">
+                        Регистрация и результаты
+                    </p>
+                </a>
+
+                <a href="mailto:lordofthewinds2026@gmail.com" class="group bg-graphite p-10 flex flex-col items-center justify-center text-center hover:bg-white/5 transition-colors cursor-pointer h-64">
+                    <div class="w-12 h-12 mb-6 text-white/50 group-hover:text-acid-lime transition-colors">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    </div>
+                    <h3 class="font-display text-xl text-white uppercase mb-2 group-hover:text-acid-lime transition-colors">E-MAIL</h3>
+                    <p class="text-white/40 font-mono text-xs uppercase tracking-widest">
+                        Сотрудничество
+                    </p>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+<footer class="bg-graphite py-12 text-xs md:text-sm">
+    <div class="container mx-auto px-4 flex flex-col md:flex-row justify-center items-center gap-6 text-white/40">
+
+        <div class="text-center">
+            © 2026 Владыка Ветра.<br>Санкт-Петербург / Весь Мир.
+        </div>
+    </div>
+</footer>
+<script>
+        // ==========================================
+        // УСТАНОВИ ЗДЕСЬ ДАТУ СТАРТА
+        // Формат: Month Day, Year Hour:Minute:Second
+        // ==========================================
+        const targetDate = new Date("February 17, 2026 09:00:00").getTime();
+
+        const timerInterval = setInterval(function() {
+            // Текущее время пользователя
+            const now = new Date().getTime();
+            
+            // Разница между датой старта и текущим временем
+            const distance = targetDate - now;
+
+            // Расчеты времени
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Функция для добавления нуля (05 вместо 5)
+            const pad = (num) => String(num).padStart(2, '0');
+
+            // Вывод на страницу
+            if (distance > 0) {
+                document.getElementById("days").innerText = pad(days);
+                document.getElementById("hours").innerText = pad(hours);
+                document.getElementById("minutes").innerText = pad(minutes);
+                document.getElementById("seconds").innerText = pad(seconds);
+            } else {
+                // Если время вышло
+                clearInterval(timerInterval);
+                document.getElementById("days").innerText = "00";
+                document.getElementById("hours").innerText = "00";
+                document.getElementById("minutes").innerText = "00";
+                document.getElementById("seconds").innerText = "00";
+                // Можно добавить текст "ГОНКА НАЧАЛАСЬ!"
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
