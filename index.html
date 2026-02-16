@@ -248,39 +248,11 @@
                 </h2>
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="aspect-square bg-white/5 border border-white/10 relative group overflow-hidden">
-                    <div class="absolute inset-0 bg-white/10 animate-pulse"></div> <div class="absolute bottom-0 left-0 w-full p-2 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div class="text-acid-lime text-xs font-bold font-display">ALEX_RIDER</div>
-                        <div class="text-white/50 text-[10px] font-mono">KITE SKI</div>
-                    </div>
-                </div>
-                <div class="aspect-square bg-white/5 border border-white/10 relative group overflow-hidden">
-                     <div class="absolute inset-0 bg-white/5"></div>
-                     <div class="absolute bottom-0 left-0 w-full p-2 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div class="text-acid-lime text-xs font-bold font-display">MARIA_WIND</div>
-                        <div class="text-white/50 text-[10px] font-mono">WING</div>
-                    </div>
-                </div>
-                <div class="aspect-square bg-white/5 border border-white/10 relative group overflow-hidden md:col-span-2">
-                     <div class="absolute inset-0 bg-white/5"></div>
-                     <div class="absolute bottom-0 left-0 w-full p-2 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-                        <div class="text-acid-lime text-xs font-bold font-display">TEAM_SPB</div>
-                        <div class="text-white/50 text-[10px] font-mono">SPOT CHECK</div>
-                    </div>
-                </div>
-                <div class="aspect-square bg-white/5 border border-white/10 relative group overflow-hidden">
-                     <div class="absolute inset-0 bg-white/5"></div>
-                </div>
-                 <div class="aspect-square bg-white/5 border border-white/10 relative group overflow-hidden">
-                     <div class="absolute inset-0 bg-white/5"></div>
-                </div>
-                 <div class="aspect-square bg-white/5 border border-white/10 relative group overflow-hidden">
-                     <div class="absolute inset-0 bg-white/5"></div>
-                </div>
-                 <div class="aspect-square bg-white/5 border border-white/10 relative group overflow-hidden">
-                     <div class="absolute inset-0 bg-white/5"></div>
-                </div>
+            <div id="gallery-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 min-h-[300px]">
+                <div class="aspect-square bg-white/5 animate-pulse"></div>
+                <div class="aspect-square bg-white/5 animate-pulse"></div>
+                <div class="aspect-square bg-white/5 animate-pulse md:col-span-2"></div>
+                <div class="aspect-square bg-white/5 animate-pulse"></div>
             </div>
             
             <div class="mt-8 text-center">
@@ -290,6 +262,50 @@
             </div>
         </div>
     </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const API_URL = 'https://mspts.eu/api_results.php'; 
+            const container = document.getElementById('gallery-grid');
+
+            fetch(`${API_URL}?type=photos&class_id=1`) // class_id тут не важен, но API его просит, можно оставить 1
+                .then(res => res.json())
+                .then(data => {
+                    // Если фото нет, оставляем как есть или пишем текст
+                    if (!data || data.length === 0) return;
+
+                    container.innerHTML = ''; // Очищаем скелетон
+
+                    data.forEach((item, index) => {
+                        // Логика для "большой" плитки (3-й элемент, индекс 2)
+                        // Твой дизайн: <div ... md:col-span-2">
+                        let spanClass = (index === 2) ? 'md:col-span-2' : '';
+                        
+                        // Если класс не определен (null), пишем просто "RIDER"
+                        let className = item.class_name ? item.class_name : 'RIDER';
+
+                        let html = `
+                        <div class="aspect-square bg-white/5 border border-white/10 relative group overflow-hidden ${spanClass}">
+                            <img src="${item.primary_photo_url}" 
+                                 class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100" 
+                                 alt="${item.surname}">
+                            
+                            <div class="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black via-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <div class="text-acid-lime text-xs font-bold font-display uppercase transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                                    ${item.surname} ${item.firstname}
+                                </div>
+                                <div class="text-white/50 text-[10px] font-mono uppercase transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300 delay-75">
+                                    ${className}
+                                </div>
+                            </div>
+                        </div>
+                        `;
+                        container.insertAdjacentHTML('beforeend', html);
+                    });
+                })
+                .catch(err => console.error('Ошибка загрузки фото:', err));
+        });
+    </script>
  <section id="classes" class="py-20 bg-graphite border-b border-white/10 scroll-mt-16">
 
         <div class="container mx-auto px-4">
