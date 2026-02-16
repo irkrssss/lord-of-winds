@@ -138,8 +138,23 @@
         const CLASS_ID = 16; // ID класса для этой страницы (меняй для разных страниц)
         const API_URL = 'https://mspts.eu/api_results.php'; // Адрес твоего нового файла
 
-        // При загрузке страницы сразу грузим Скорость
-        document.addEventListener('DOMContentLoaded', () => loadTab('speed'));
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Сначала проверяем, есть ли class_id в ссылке (из бота)
+    const urlParams = new URLSearchParams(window.location.search);
+    const botClassId = urlParams.get('class_id');
+
+    if (botClassId) {
+        // Если пришли из бота — сразу грузим этот класс
+        switchClass(botClassId);
+    } else {
+        // Если пришли просто так — ищем активную кнопку по умолчанию
+        const activeBtn = document.querySelector('.class-btn.active');
+        if(activeBtn) {
+            const defaultId = activeBtn.id.replace('btn-class-', '');
+            switchClass(defaultId); // Используем функцию переключения, чтобы обновить и кнопки тоже
+        }
+    }
+});
 
         function loadTab(type) {
             // 1. Управление кнопками (цвета)
