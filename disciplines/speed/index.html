@@ -148,27 +148,151 @@
         <div class="text-white/30 text-xs font-mono">© 2026 LORD OF THE WINDS</div>
     </footer>
 
-    <script>
+<script>
+        // КОНФИГУРАЦИЯ
+        const API_URL = 'https://mspts.eu/api_results.php';
+        
+        // Маппинг ID дисциплины (из data-discipline-id) в "type" для API
+        const DISCIPLINES = {
+            1: 'speed',     // Скорость
+            2: 'marathon',  // Марафон
+            3: 'konyuhov',  // Конюхов
+            4: 'gump'       // Форрест Гамп
+        };
+
+        // При загрузке страницы:
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Узнаем, какая это страница (id=4 для Гампа)
+            const disciplineId = document.body.getAttribute('data-discipline-id');
+            
+            // 2. Загружаем дефолтный класс (например, 8 - Кайт сноуборд)
+            // Или ищем кнопку с классом 'active'
+            const activeBtn = document.querySelector('.class-btn.active');
+            if(activeBtn) {
+                // Вытаскиваем ID из id="btn-class-8"
+                const classId = activeBtn.id.replace('btn-class-', '');
+                loadResults(classId);
+            }
+        });
+
+        // Функция переключения (вызывается по клику на кнопки)
         function switchClass(classId) {
-            // 1. Сброс стилей всех кнопок
+            // 1. Сброс стилей кнопок
             document.querySelectorAll('.class-btn').forEach(btn => {
-                btn.classList.remove('bg-acid-lime', 'text-black', 'border-acid-lime');
-                btn.classList.add('border-white/20', 'text-white/50');
+                btn.className = "class-btn shrink-0 border border-white/20 text-white/50 px-4 py-3 font-display text-xs uppercase font-bold transition-all hover:border-white hover:text-white";
             });
 
-            // 2. Активация нажатой кнопки
+            // 2. Активация нужной кнопки
             const activeBtn = document.getElementById('btn-class-' + classId);
-            activeBtn.classList.remove('border-white/20', 'text-white/50');
-            activeBtn.classList.add('bg-acid-lime', 'text-black', 'border-acid-lime');
+            activeBtn.className = "class-btn active shrink-0 border border-acid-lime bg-acid-lime text-black px-4 py-3 font-display text-xs uppercase font-bold transition-all hover:bg-white";
 
-            // 3. Анимация передергивания контента (имитация загрузки)
+            // 3. Загрузка данных
+            loadResults(classId);
+        }
+
+        // ГЛАВНАЯ ФУНКЦИЯ ЗАГРУЗКИ
+        function loadResults(classId) {
             const container = document.getElementById('results-container');
-            container.style.opacity = '0.5';
-            setTimeout(() => {
-                container.style.opacity = '1';
-            }, 300);
+            const disciplineId = document.body.getAttribute('data-discipline-id');
+            const apiType = DISCIPLINES[disciplineId];
+
+            // Показываем "Загрузку"
+            container.innerHTML = `
+                <div class="w-full h-64 border border-white/10 bg-white/5 flex flex-col items-center justify-center text-center p-8 animate-pulse">
+                    <div class="text-acid-lime font-mono text-xs">
+                        > ЗАГРУЗКА ДАННЫХ...
+                    </div>
+                </div>
+            `;
+
+            // Запрос к API
+            fetch(`${API_URL}?type=${apiType}&class_id=${classId}`)
+                .then(res => res.json())
+                .then(data => {
+                    renderTable(data);
+                })
+                .catch(err => {
+                    console.error(err);
+                    container.innerHTML = `<div class="p-8 text-center text-red-500 font-mono">ОШИБКА ЗАГРУЗКИ</div>`;
+                });
+        }
+
+        // ФУНКЦИЯ ОТРИСОВКИ ТАБЛИЦЫ
+        function renderTable(data) {
+            const container = document.getElementById('results-container');
             
-            // В будущем здесь будет вызов loadResults(disciplineId, classId)
+            if (!data || data.length === 0) {
+                container.innerHTML = `
+                    <div class="w-full h-64 border border-white/10 bg-white/5 flex flex-col items-center justify-center text-center p-8">
+                        <div class="font-display text-2xl text-white mb-2 uppercase">Нет результатов</div>
+                        <p class="text-white/50 font-mono text-sm">В этом классе пока нет заездов.</p>
+                    </div>`;
+                return;
+            }
+
+            let html = `
+                <div class="overflow-x-auto bg-white/5 border border-white/10 p-6 min-h-[400px]">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="font-mono text-xs text-white/50 uppercase border-b border-white/10">
+                            <tr>
+                                <th class="py-4 pl-4 w-16">Место</th>
+                                <th class="py-4">Райдер</th>
+                                <th class="py-4 text-right pr-4">Результат</th>
+                                <th class="py-4 text-right pr-4 hidden md:table-cell">Дата</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm font-display text-white">
+            `;
+
+            data.forEach((row, index) => {
+                const place = index + 1;
+                let rowStyle = "border-b border-white/5 hover:bg-white/10 transition-colors group cursor-pointer";
+                let placeBadge = `<span class="text-white/30 font-mono">#${place}</span>`;
+                let textStyle = "";
+                let glowEffect = "";
+
+                // === ЛОГИКА ПОДСВЕТКИ ТОП-3 ===
+                if (place === 1) {
+                    // 1 МЕСТО: Кислотный неон
+                    rowStyle = "border border-acid-lime bg-acid-lime/10 hover:bg-acid-lime/20 cursor-pointer shadow-[0_0_15px_rgba(0,243,255,0.2)] z-10 relative my-2 transform scale-[1.01]";
+                    placeBadge = `<span class="bg-acid-lime text-black font-bold px-2 py-1 text-xs">TOP 1</span>`;
+                    textStyle = "text-acid-lime"; 
+                } else if (place === 2) {
+                    // 2 МЕСТО: Белое свечение
+                    rowStyle = "border border-white/50 bg-white/5 hover:bg-white/10 cursor-pointer my-1";
+                    placeBadge = `<span class="border border-white text-white font-bold px-2 py-0.5 text-xs">TOP 2</span>`;
+                    textStyle = "text-white";
+                } else if (place === 3) {
+                    // 3 МЕСТО: Оранжевый/Бронза (можно настроить цвет)
+                    rowStyle = "border border-orange-400/50 bg-orange-400/5 hover:bg-orange-400/10 cursor-pointer my-1";
+                    placeBadge = `<span class="border border-orange-400 text-orange-400 font-bold px-2 py-0.5 text-xs">TOP 3</span>`;
+                    textStyle = "text-orange-300";
+                }
+
+                // Ссылка на Страву
+                let clickAction = "";
+                if(row.strava_id) {
+                     clickAction = `onclick="window.open('https://www.strava.com/activities/${row.strava_id}', '_blank')"`;
+                }
+
+                html += `
+                    <tr ${clickAction} class="${rowStyle}">
+                        <td class="py-4 pl-4">${placeBadge}</td>
+                        <td class="py-4 uppercase tracking-wider ${textStyle} font-bold">
+                            ${row.surname} ${row.firstname}
+                        </td>
+                        <td class="py-4 text-right pr-4 font-bold text-lg ${textStyle}">
+                            ${row.display}
+                        </td>
+                        <td class="py-4 text-right pr-4 text-white/30 font-mono text-xs hidden md:table-cell">
+                            ${new Date(row.start_date).toLocaleDateString('ru-RU')}
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += `</tbody></table></div>`;
+            container.innerHTML = html;
         }
     </script>
 </body>
