@@ -135,7 +135,7 @@
 
     <script>
         // НАСТРОЙКИ
-        const CLASS_ID = 11; // ID класса для этой страницы (меняй для разных страниц)
+        const CLASS_ID = 15; // ID класса для этой страницы (меняй для разных страниц)
         const API_URL = 'https://mspts.eu/api_results.php'; // Адрес твоего нового файла
 
         // При загрузке страницы сразу грузим Скорость
@@ -222,6 +222,25 @@
     <footer class="bg-black py-12 border-t border-white/10 text-center">
         <div class="text-white/30 text-xs font-mono">© 2026 LORD OF THE WINDS</div>
     </footer>
+<script>
+        function switchTab(tabId) {
+            // 1. Сброс кнопок
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('text-acid-lime');
+                btn.classList.add('text-white/30');
+            });
+            // 2. Активная кнопка
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.remove('text-white/30');
+            activeBtn.classList.add('text-acid-lime');
 
+            // 3. Скрытие контента
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            // 4. Показ контента
+            document.getElementById('tab-' + tabId).classList.add('active');
+        }
+    </script>
 </body>
 </html>
