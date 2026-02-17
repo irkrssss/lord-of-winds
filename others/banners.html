@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOT BANNERS GENERATOR v3</title>
+    <title>NEW BANNERS SET</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100..800&family=Unbounded:wght@200..900&display=swap" rel="stylesheet">
     
@@ -28,7 +28,6 @@
             gap: 50px;
         }
 
-        /* Контейнер баннера */
         .banner {
             width: 800px;
             height: 400px;
@@ -41,11 +40,9 @@
             align-items: center;
             box-shadow: 0 0 50px rgba(0,0,0,0.5);
             border: 1px solid #333;
-            /* Добавил легкий радиальный градиент, чтобы без сетки фон не был совсем плоским */
             background: radial-gradient(circle at center, #1a1a1a 0%, #0F0F0F 100%);
         }
 
-        /* НОВОЕ: Стили для фонового изображения */
         .banner-bg-img {
             position: absolute;
             inset: 0;
@@ -53,147 +50,154 @@
             height: 100%;
             object-fit: cover;
             z-index: 0; 
-            /* БЫЛО: opacity: 0.6; brightness(0.7); */
-            /* СТАЛО: Ярче и четче */
             opacity: 0.8; 
             filter: grayscale(100%) contrast(1.1) brightness(1.1); 
             mix-blend-mode: hard-light; 
         }
 
-        /* Контент поверх всего */
         .banner-content {
             position: relative;
             z-index: 10;
+        }
+
+        /* Анимация сканирования для баннера документов */
+        @keyframes scan {
+            0% { top: 0%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+        .scan-line {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #00F3FF;
+            box-shadow: 0 0 15px #00F3FF;
+            animation: scan 3s linear infinite;
         }
     </style>
 </head>
 <body>
 
     <div class="banner">
-        <img src="bg-cover.jpg" class="banner-bg-img" onerror="this.src='https://placehold.co/800x400/222/555?text=PUT+bg-cover.jpg+HERE'">
+        <div class="absolute top-6 left-8 font-mono text-acid-lime text-xs tracking-widest border-b border-acid-lime pb-1">USER_ARCHIVE</div>
         
-        <div class="absolute inset-0 bg-gradient-to-t from-[#0F0F0F] via-black/30 to-transparent z-1"></div>
-        
-        <div class="banner-content text-center">
-            <div class="text-white/70 font-mono text-sm tracking-[0.5em] mb-4 font-bold">GLOBAL CHALLENGE 2026</div>
-            <h1 class="font-display font-black text-8xl text-white leading-none mb-4 drop-shadow-2xl">
-                ВЛАДЫКА<br>
-                <span class="text-transparent" style="-webkit-text-stroke: 2px #00F3FF; text-shadow: 0 0 20px rgba(0,243,255,0.3);">ВЕТРА</span>
-            </h1>
-            <div class="w-32 h-1 bg-acid-lime mx-auto mt-8 shadow-[0_0_25px_#00F3FF]"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(0,243,255,0.05)_50%,transparent_75%,transparent_100%)] bg-[length:20px_20px]"></div>
+
+        <div class="banner-content flex flex-col items-center">
+            <div class="relative mb-6">
+                <div class="w-20 h-14 border-2 border-white/20 rounded bg-black absolute -top-4 -right-6 rotate-6"></div>
+                <div class="w-20 h-14 border-2 border-white/40 rounded bg-black absolute -top-2 -right-3 rotate-3"></div>
+                <div class="w-20 h-14 border-2 border-acid-lime rounded bg-black/80 flex items-center justify-center relative shadow-[0_0_20px_rgba(0,243,255,0.3)]">
+                    <span class="text-acid-lime font-bold">✓</span>
+                </div>
+            </div>
+
+            <h2 class="font-display font-black text-6xl text-white tracking-wider mb-2">МОИ ЗАЯВКИ</h2>
+            <div class="flex gap-4 mt-4">
+                <div class="px-4 py-1 bg-white/5 border border-white/10 rounded text-xs font-mono text-white/50">DRAFT</div>
+                <div class="px-4 py-1 bg-acid-lime/10 border border-acid-lime rounded text-xs font-mono text-acid-lime">ACTIVE</div>
+                <div class="px-4 py-1 bg-white/5 border border-white/10 rounded text-xs font-mono text-white/50">HISTORY</div>
+            </div>
         </div>
-    
     </div>
 
-   <div class="banner">
-        <div class="absolute top-6 left-6 w-8 h-8 border-t-2 border-l-2 border-white/30 z-10"></div>
-        <div class="absolute bottom-6 right-6 w-8 h-8 border-b-2 border-r-2 border-white/30 z-10"></div>
+    <div class="banner">
+        <div class="absolute -right-10 -bottom-10 w-64 h-64 border border-acid-lime/20 rounded-full animate-pulse"></div>
+        <div class="absolute -right-10 -bottom-10 w-48 h-48 border border-acid-lime/40 rounded-full"></div>
 
-        <div class="absolute top-6 right-8 font-display text-acid-lime text-xs tracking-[0.3em] z-20 opacity-80 drop-shadow-[0_0_5px_#00F3FF]">
-            LORD OF THE WINDS
+        <div class="banner-content w-full px-16 flex items-center justify-between">
+            <div>
+                <div class="text-acid-lime font-mono text-sm mb-2">> NEW_ENTRY_PROTOCOL</div>
+                <h2 class="font-display font-black text-6xl text-white leading-tight drop-shadow-xl">
+                    ПОДАТЬ<br>
+                    <span class="text-transparent" style="-webkit-text-stroke: 2px #00F3FF;">ЗАЯВКУ</span>
+                </h2>
+            </div>
+            
+            <div class="w-32 h-32 border-2 border-acid-lime rounded-full flex items-center justify-center relative group">
+                <div class="absolute inset-0 bg-acid-lime/10 rounded-full group-hover:bg-acid-lime/20 transition duration-300"></div>
+                <span class="font-display text-8xl text-acid-lime pb-4 shadow-acid-lime drop-shadow-[0_0_10px_#00F3FF] transition transform group-hover:scale-110">+</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="banner">
+        <div class="absolute inset-0" style="background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px); background-size: 40px 40px;"></div>
+
+        <div class="banner-content flex items-center gap-10">
+            <div class="relative">
+                <div class="w-40 h-40 rounded-full border-2 border-white/20 relative z-10 bg-black flex items-center justify-center overflow-hidden">
+                    <span class="text-6xl grayscale opacity-50">👤</span>
+                </div>
+                <div class="absolute inset-0 -m-2 border border-acid-lime/30 rounded-full w-44 h-44 animate-[spin_10s_linear_infinite]"></div>
+                <div class="absolute inset-0 -m-4 border border-dashed border-acid-lime/20 rounded-full w-48 h-48 animate-[spin_15s_linear_infinite_reverse]"></div>
+                <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-acid-lime text-black font-bold font-mono text-xs px-2 py-0.5 rounded">ONLINE</div>
+            </div>
+
+            <div class="flex flex-col">
+                <h2 class="font-display font-bold text-6xl text-white mb-2 tracking-wider">ПРОФИЛЬ</h2>
+                <div class="font-mono text-white/60 text-sm space-y-1">
+                    <p>> ID: <span class="text-acid-lime">8492-AX</span></p>
+                    <p>> RANK: <span class="text-white">NOVICE</span></p>
+                    <p>> SETTINGS: <span class="text-white">EDITABLE</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="banner">
+        <div class="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black z-10"></div>
+        <div class="absolute top-0 w-full h-full flex justify-between px-10 opacity-10">
+             <div class="w-px h-full bg-white"></div>
+             <div class="w-px h-full bg-white"></div>
+             <div class="w-px h-full bg-white"></div>
         </div>
 
-        <div class="banner-content w-full px-16">
-            <h2 class="font-display font-black text-6xl text-transparent mb-10 tracking-widest" style="-webkit-text-stroke: 2px #00F3FF;">
-                РЕГИСТРАЦИЯ
+        <div class="banner-content text-center z-20">
+            <h2 class="font-display font-black text-7xl text-white italic tracking-tighter transform -skew-x-6 mb-2" style="text-shadow: 4px 4px 0px #333;">
+                РЕЗУЛЬТАТЫ
+            </h2>
+            <div class="flex justify-center items-center gap-6 mt-4">
+                <div class="bg-black/50 border border-acid-lime/50 px-6 py-2 rounded skew-x-12">
+                    <span class="font-mono text-acid-lime text-2xl font-bold drop-shadow-[0_0_5px_#00F3FF]">01:42.58</span>
+                </div>
+                 <div class="bg-black/50 border border-white/20 px-4 py-2 rounded skew-x-12 opacity-50">
+                    <span class="font-mono text-white text-xl">--:--.--</span>
+                </div>
+            </div>
+            <div class="mt-6 text-xs font-mono text-white/40 tracking-[0.5em]">OFFICIAL TIMING PARTNER</div>
+        </div>
+    </div>
+
+    <div class="banner">
+        <div class="scan-line top-1/2"></div>
+        
+        <div class="absolute top-4 right-4 flex gap-1">
+            <div class="w-2 h-2 bg-acid-lime rounded-full"></div>
+            <div class="w-2 h-2 bg-acid-lime/50 rounded-full"></div>
+            <div class="w-2 h-2 bg-acid-lime/20 rounded-full"></div>
+        </div>
+
+        <div class="banner-content flex flex-col items-center">
+            <div class="border border-acid-lime/50 p-4 rounded-lg bg-acid-lime/5 backdrop-blur-sm mb-6 relative">
+                <div class="absolute -top-1 -left-1 w-3 h-3 border-t-2 border-l-2 border-acid-lime"></div>
+                <div class="absolute -bottom-1 -right-1 w-3 h-3 border-b-2 border-r-2 border-acid-lime"></div>
+                
+                <div class="text-5xl">🔒</div>
+            </div>
+
+            <h2 class="font-display font-bold text-5xl text-white text-center leading-tight">
+                ОБРАБОТКА<br>
+                <span class="text-acid-lime">ДАННЫХ</span>
             </h2>
             
+            <p class="font-mono text-white/50 text-xs mt-4 tracking-widest bg-black/50 px-4 py-1 rounded border border-white/10">
+                // SECURE CONNECTION ESTABLISHED
+            </p>
         </div>
     </div>
 
-    <div class="banner">
-             <div class="absolute top-6 right-8 font-display text-acid-lime text-xs tracking-[0.3em] z-20 opacity-80 drop-shadow-[0_0_5px_#00F3FF]">
-            LORD OF THE WINDS
-        </div>        
-            <h2 class="font-display font-bold text-6xl text-white mb-4 tracking-wider text-center">ПРИВЯЗАТЬ ТРЕКЕР</h2>
-
-            <div class="flex gap-8">
-                <div class="border-2 border-acid-lime/50 bg-acid-lime/10 px-6 py-3 rounded flex items-center gap-3">
-                    <div class="w-3 h-3 bg-acid-lime rounded-full shadow-[0_0_10px_#00F3FF]"></div>
-                    <span class="text-white font-mono text-sm font-bold">STRAVA</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="banner">
-        <div class="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black z-1"></div>
-        
-        <div class="banner-content text-center w-full">
-            <h2 class="font-display font-black text-6xl text-white mb-12 italic tracking-wider">ЗАЯВКА</h2>
-            
-            <div class="flex justify-center gap-16">
-                <div class="text-center group flex flex-col items-center">
-                    <div class="text-5xl mb-4 grayscale group-hover:grayscale-0 transition duration-300 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">🪁</div>
-                    <div class="font-mono text-acid-lime text-sm border-t-2 border-acid-lime pt-2 tracking-widest">KITE</div>
-                </div>
-                <div class="text-center group flex flex-col items-center">
-                    <div class="text-5xl mb-4 grayscale group-hover:grayscale-0 transition duration-300 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">🦅</div>
-                    <div class="font-mono text-acid-lime text-sm border-t-2 border-acid-lime pt-2 tracking-widest">WING</div>
-                </div>
-                <div class="text-center group flex flex-col items-center">
-                    <div class="text-5xl mb-4 grayscale group-hover:grayscale-0 transition duration-300 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">🏄</div>
-                    <div class="font-mono text-acid-lime text-sm border-t-2 border-acid-lime pt-2 tracking-widest">SURF</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="banner">
-        
-        <div class="banner-content w-full px-12 flex justify-between items-end">
-            <div>
-                <h2 class="font-display font-bold text-6xl text-white mb-4 tracking-wider">РЕЙТИНГ</h2>
-                <div class="text-acid-lime font-mono text-sm border border-acid-lime/30 p-2 inline-block bg-acid-lime/5">
-                    > STATUS: LIVE UPDATE
-                    <span class="inline-block w-2 h-2 bg-acid-lime rounded-full ml-2 animate-pulse"></span>
-                </div>
-            </div>
-            
-            <div class="flex items-end gap-4 h-40">
-                <div class="w-16 bg-white/10 h-[40%] relative border-t border-l border-r border-white/20">
-                    <span class="absolute -top-8 left-0 w-full text-center text-white/50 font-mono text-xl font-bold">2</span>
-                </div>
-                <div class="w-16 bg-acid-lime h-[80%] relative shadow-[0_0_30px_#00F3FF]">
-                    <span class="absolute -top-8 left-0 w-full text-center text-acid-lime font-mono text-xl font-bold">1</span>
-                    <div class="absolute bottom-0 w-full h-full bg-gradient-to-t from-black/50 to-transparent"></div>
-                </div>
-                <div class="w-16 bg-white/10 h-[30%] relative border-t border-l border-r border-white/20">
-                    <span class="absolute -top-8 left-0 w-full text-center text-white/50 font-mono text-xl font-bold">3</span>
-                </div>
-            </div>
-        </div>
-        <div class="absolute top-0 right-0 w-2/3 h-full bg-gradient-to-l from-acid-lime/20 to-transparent skew-x-12 transform origin-bottom-right z-1 pointer-events-none"></div>
-    </div>
-
-    <div class="banner" style="border-color: #ff3333;">
-        <div class="absolute inset-0 bg-red-900/20 z-1"></div>
-        
-        <div class="banner-content flex items-center gap-8">
-            <div class="w-24 h-24 flex items-center justify-center border-4 border-red-500 rounded-full bg-black/50 shadow-[0_0_30px_#ff3333]">
-                <span class="text-7xl text-red-500 font-display font-bold">?</span>
-            </div>
-            <div>
-                <h2 class="font-display font-bold text-5xl text-white mb-4 tracking-wider">ПОМОЩЬ</h2>
-                <ul class="text-white/70 font-mono text-sm space-y-2">
-                    <li class="flex items-center gap-2"><span class="text-red-500">></span> Связь с ГСК</li>
-                    <li class="flex items-center gap-2"><span class="text-red-500">></span> Техподдержка</li>
-                    <li class="flex items-center gap-2"><span class="text-red-500">></span> FAQ / Правила</li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="banner-content absolute bottom-4 right-4">
-             <span class="border border-red-500/50 bg-red-500/10 text-red-500 px-3 py-1 font-mono text-xs rounded tracking-widest">SUPPORT MODE_</span>
-        </div>
-    </div>
-  <div class="banner">
-             <div class="absolute top-6 right-8 font-display text-acid-lime text-xs tracking-[0.3em] z-20 opacity-80 drop-shadow-[0_0_5px_#00F3FF]">
-            LORD OF THE WINDS
-        </div>        
-            <h2 class="font-display font-bold text-6xl text-acid-lime mb-4 tracking-wider text-center">ЛИЧНЫЙ КАБИНЕТ</h2>
-
-            </div>
-        </div>
 </body>
 </html>
